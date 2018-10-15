@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   getBook()
-  .then(sections => buildSections(sections));
+  .then(sections => buildSections(sections))
+  .catch(error => console.log(error));
 });
 
 function getBook() {
@@ -26,12 +27,17 @@ function getBook() {
 
 function buildSections(sections) {
   const ulNode = document.createElement('ul');
+  ulNode.className = 'book';
   sections.map(section => {
     const liNode = document.createElement('li');
-    liNode.textContent = section.title;
-    liNode.onclick = function() {
-      toggleSection(this, section.id);
+    liNode.className = 'section';
+    const titleNode = document.createElement('div');
+    titleNode.textContent = section.title;
+    titleNode.className = 'section-title';
+    titleNode.onclick = function() {
+      toggleSection(this.parentElement, section.id);
     };
+    liNode.appendChild(titleNode);
     ulNode.appendChild(liNode);
   });
   const containerNode = document.getElementsByClassName('container')[0];
@@ -57,11 +63,13 @@ function toggleSection(element, sectionId) {
       element.setAttribute('data-open', 'true');
     } else {
       const ulNode = document.createElement('ul');
+      ulNode.className = 'contents';
       getSection(sectionId)
         .then((chapters) => {
           chapters.map(chapter => {
             const liNode = document.createElement('li');
             liNode.textContent = chapter.title;
+            liNode.className = 'chapter';
             ulNode.appendChild(liNode);
           });
         })

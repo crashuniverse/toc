@@ -37,6 +37,13 @@ function buildSections(sections) {
     titleNode.onclick = function() {
       toggleSection(this.parentElement, section.id);
     };
+    if (section.childrenCount !== 0) {
+      const progressNode = document.createElement('div');
+      progressNode.textContent = (section.completeCount || 0) + '/' + section.childrenCount + 
+        ' concepts completed';
+      progressNode.className = 'progress';
+      titleNode.appendChild(progressNode);
+    }
     liNode.appendChild(titleNode);
     ulNode.appendChild(liNode);
   });

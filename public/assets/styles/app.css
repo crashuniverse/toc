@@ -63,6 +63,15 @@ body {
   padding: 2px 0;
 }
 
+.section-error {
+  padding: 10px;
+  color: #c0392b;
+}
+
+.section[data-open="false"] .section-error {
+  display: none;
+}
+
 .chapter::before {
   content: '✔';
   margin-right: 10px;

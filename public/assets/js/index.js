@@ -8,6 +8,10 @@ const status = {
   COMPLETE: 'COMPLETE',
 };
 
+const timeout = {
+  SECTION_ERROR: 2000,
+}
+
 function getBook() {
   return fetch('/api/book/maths')
     .then(response => {
@@ -73,6 +77,8 @@ function toggleSection(element, sectionId) {
       ulChildNode.hidden = false;
       element.setAttribute('data-open', 'true');
     } else {
+      const existingErrorNode = element.querySelector('.section-error');
+      existingErrorNode && existingErrorNode.remove();
       const ulNode = document.createElement('ul');
       ulNode.className = 'contents';
       const loader = document.createElement('div');
@@ -94,8 +100,17 @@ function toggleSection(element, sectionId) {
         })
         .catch(error => {
           console.log(error);
-          hideSectionLoader();
-          ulNode.remove();
+          setTimeout(() => {
+            hideSectionLoader();
+            ulNode.remove();
+            const existingErrorNode = element.querySelector('.section-error');
+            if (!existingErrorNode) {
+              const errorNode = document.createElement('div');
+              errorNode.textContent = 'Error loading chapters and lessons';
+              errorNode.className = 'section-error';
+              element.appendChild(errorNode);
+            }
+          }, timeout.SECTION_ERROR);
         });
       element.appendChild(ulNode);
       element.setAttribute('data-open', 'true');

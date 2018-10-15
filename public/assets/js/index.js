@@ -4,10 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
   .catch(error => console.log(error));
 });
 
+const status = {
+  COMPLETE: 'COMPLETE',
+};
+
 function getBook() {
   return fetch('/api/book/maths')
     .then(response => {
-      console.log(response);
       if(response.ok) {
         return response.json();
       }
@@ -19,7 +22,6 @@ function getBook() {
         unsortedSections.sort((a,b) => {
           return a.sequenceNO - b.sequenceNO;
         })
-      console.log(sections);
       return sections;
     })
     .catch(error => console.log(error));
@@ -61,7 +63,9 @@ function toggleSection(element, sectionId) {
   const isOpen = element.getAttribute('data-open');
   if (isOpen === 'true') {
     const ulChildNode = element.querySelector('ul');
-    ulChildNode.hidden = true;
+    if (ulChildNode) { 
+      ulChildNode.hidden = true;
+    }
     element.setAttribute('data-open', 'false');
   } else {
     const ulChildNode = element.querySelector('ul');
@@ -81,6 +85,9 @@ function toggleSection(element, sectionId) {
             const liNode = document.createElement('li');
             liNode.textContent = chapter.title;
             liNode.className = 'chapter';
+            if (chapter.status === status.COMPLETE) {
+              liNode.classList = 'chapter complete';
+            }
             ulNode.appendChild(liNode);
           });
           hideSectionLoader();
@@ -88,6 +95,7 @@ function toggleSection(element, sectionId) {
         .catch(error => {
           console.log(error);
           hideSectionLoader();
+          ulNode.remove();
         });
       element.appendChild(ulNode);
       element.setAttribute('data-open', 'true');
@@ -110,7 +118,6 @@ function getSection(sectionId) {
         unsortedChapters.sort((a,b) => {
           return a.sequenceNO - b.sequenceNO;
         })
-      console.log(chapters);
       return chapters;
     })
     .catch(error => console.log(error));

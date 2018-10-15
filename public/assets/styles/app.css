@@ -62,3 +62,15 @@ body {
   margin: 3px 0;
   padding: 2px 0;
 }
+
+.chapter::before {
+  content: '✔';
+  margin-right: 10px;
+  color: #dddddd;
+}
+
+.chapter.complete::before {
+  color: initial;
+  content: '✔';
+  margin-right: 10px;
+}

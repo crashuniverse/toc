@@ -1,3 +1,5 @@
+/* global */
+
 html,
 body {
   margin: 0;
@@ -9,6 +11,8 @@ body {
   width: 960px;
   margin: 0 auto;
 }
+
+/* book */
 
 .section {
   list-style-type: none;
@@ -30,10 +34,18 @@ body {
   cursor: pointer;
 }
 
+/* section */
+
 .contents {
+  padding: 10px;
   list-style-type: none;
   font-size: 1em;
   font-weight: normal;
   background-color: #ffffff;
   color: #000000;
+}
+
+.chapter {
+  margin: 3px 0;
+  padding: 2px 0;
 }

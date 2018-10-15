@@ -41,13 +41,13 @@ function buildSections(sections) {
     ulNode.appendChild(liNode);
   });
   const containerNode = document.getElementsByClassName('container')[0];
-  hideLoader();
+  hideBookLoader();
   containerNode.appendChild(ulNode);
 }
 
-function hideLoader() {
-  const loaderNode = document.getElementsByClassName('loader')[0];
-  loaderNode.hidden = true;
+function hideBookLoader() {
+  const loaderNode = document.getElementsByClassName('loader-book')[0];
+  loaderNode.remove();
 }
 
 function toggleSection(element, sectionId) {
@@ -64,6 +64,10 @@ function toggleSection(element, sectionId) {
     } else {
       const ulNode = document.createElement('ul');
       ulNode.className = 'contents';
+      const loader = document.createElement('div');
+      loader.textContent = 'Loading chapters and lessons';
+      loader.className = 'loader-section';
+      ulNode.appendChild(loader);
       getSection(sectionId)
         .then((chapters) => {
           chapters.map(chapter => {
@@ -72,12 +76,21 @@ function toggleSection(element, sectionId) {
             liNode.className = 'chapter';
             ulNode.appendChild(liNode);
           });
+          hideSectionLoader();
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error);
+          hideSectionLoader();
+        });
       element.appendChild(ulNode);
       element.setAttribute('data-open', 'true');
     }
   }
+}
+
+function hideSectionLoader() {
+  const loaderNode = document.getElementsByClassName('loader-section')[0];
+  loaderNode.remove();
 }
 
 function getSection(sectionId) {

@@ -1,19 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
-  getBook();
+  getBook()
+  .then(sections => buildSections(sections));
 });
 
 function getBook() {
-  fetch('/api/book/maths')
-    .then(response => response.json())
+  return fetch('/api/book/maths')
+    .then(response => {
+      console.log(response);
+      if(response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not ok.');
+    })
     .then(data  => {
-      const unsortedSections = data.response.slice();
+      const unsortedSections = data && data.response && data.response.slice();
       const sections = unsortedSections &&
         unsortedSections.sort((a,b) => {
           return a.sequenceNO - b.sequenceNO;
         })
       console.log(sections);
-      buildSections(sections);
+      return sections;
     })
+    .catch(error => console.log(error));
 }
 
 function buildSections(sections) {
@@ -56,7 +64,8 @@ function toggleSection(element, sectionId) {
             liNode.textContent = chapter.title;
             ulNode.appendChild(liNode);
           });
-        });
+        })
+        .catch(error => console.log(error));
       element.appendChild(ulNode);
       element.setAttribute('data-open', 'true');
     }
@@ -67,7 +76,8 @@ function getSection(sectionId) {
   return fetch(`/api/book/maths/section/${sectionId}`)
     .then(response => response.json())
     .then(data  => {
-      const unsortedChapters = data.response[sectionId].slice();
+      const unsortedChapters = data && data.response && data.response[sectionId]
+        && data.response[sectionId].slice();
       const chapters = unsortedChapters &&
         unsortedChapters.sort((a,b) => {
           return a.sequenceNO - b.sequenceNO;
@@ -75,4 +85,5 @@ function getSection(sectionId) {
       console.log(chapters);
       return chapters;
     })
+    .catch(error => console.log(error));
 }
